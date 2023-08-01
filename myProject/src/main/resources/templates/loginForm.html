@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>로그인</title>
+	</head>
+	<style>
+	
+		* {
+		    margin: 0;
+		    padding: 0;
+		    font: normal 12px '돋움';
+		}
+		
+		ul, ol {list-style: none;}
+		a {text-decoration: none; color: #111;}
+		input, textarea {outline: none;}
+		
+		#wrapper {
+		    width: 800px;
+		    height: auto;
+		    margin: 0 auto;
+		}
+		
+		header {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-bottom: 1px solid #ebebeb;
+		    box-sizing: border-box;
+		}
+		
+		header > h3 {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;
+		}
+		
+		/* 메인공통 */
+		main {
+			display: flex;
+    		align-items: center;
+		    width: 100%;
+		    height: auto;
+		    min-height: 750px;
+		}
+			
+		/* 푸터공통 */
+		footer {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-top: 1px solid #ebebeb;
+		    box-sizing: border-box;            
+		}
+		
+		footer > p {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;           
+		}
+		
+		#login {
+			position: relative;
+		    left: 200px;
+		    padding: 65px;
+		    border: 1px solid #D3D3D3;
+		}
+		
+		#login > h3 {
+			font-weight: bold;
+			font-size: 16px;
+			color: gray;
+			margin-bottom: 10px;
+		}
+		
+		.loginForm {
+			width: 300px;
+			height: 70px;
+			padding-left: 10px;
+    		padding-top: 15px;
+		}
+		
+		.loginForm > div {
+			float: left;
+		}
+		
+		.loginForm > div input {
+			width: 200px;
+			height: 30px;
+			margin-bottom: 5px;
+			border: 1px solid #D3D3D3;
+			text-indent: 5px;
+		}
+		
+		.loginForm > div button {
+			width: 80px;
+		    height: 69px;
+		    color : gray;
+		    font-weight: bold;
+		    margin-left : 5px;
+		    border: none;
+		}
+		
+		.loginButton {
+			width: 300px;
+		    height: 50px;
+		    padding-left: 10px;
+		    padding-top: 15px;
+		}
+		
+		.loginButton > button {
+		    width: 100px;
+		    height: 35px;
+		    font-weight: bold;
+		    border: none;
+		    color: gray;
+		}
+		
+		.loginButton > button > a {
+		    color : gray;
+		    font-weight: bold;
+		    border: none;
+		}
+		
+		button > a:hover {
+			text-decoration: underline;
+		}
+		
+		button:hover {
+			text-decoration: underline;
+		}
+		
+	</style>
+	<body>
+		<div id="wrapper">
+			<div>
+				<header>
+					<h3>Board System</h3>
+				</header>
+			</div>
+			<div>
+				<main>
+					<div id="login">
+						<h3>로그인</h3>
+						<form th:action="@{/login}" method="post">
+							<div class="loginForm">
+								<div>
+									<input type="text" name="username" placeholder="이름을 입력해주세요."><br/>
+									<input type="password" name="password" placeholder="비밀번호를 입력해주세요.">
+								</div>
+								<div>
+									<button class="login">로그인</button>
+								</div>
+							</div>
+						</form>
+						<div class="loginButton">
+							<button type="button"><a th:href="@{/oauth2/authorization/google}"><img alt="구글 로그인" th:src="@{/img/btn_google_signin_dark_focus_web.png}"></a></button>
+							<button type="button" style="float: right;
+    							height: 45px;"><a th:href="@{/register}">회원가입</a></button>
+						</div>
+					</div>
+					
+				</main>
+			</div>
+			<div>
+				<footer>
+					<p>ⓒCopyright</p>
+				</footer>
+			</div>
+		</div>
+	</body>
+</html>

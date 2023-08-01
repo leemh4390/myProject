@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>회원가입</title>
+	</head>
+	<style>
+		* {
+		    margin: 0;
+		    padding: 0;
+		    font: normal 12px '돋움';
+		}
+		
+		ul, ol {list-style: none;}
+		a {text-decoration: none; color: #111;}
+		input, textarea {outline: none;}
+		table {
+			border-collapse: collapse;
+		}
+		
+		#wrapper {
+		    width: 800px;
+		    height: auto;
+		    margin: 0 auto;
+		}
+		
+		header {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-bottom: 1px solid #ebebeb;
+		    box-sizing: border-box;
+		}
+		
+		header > h3 {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;
+		}
+		
+		/* 메인공통 */
+		main {
+			display: flex;
+    		align-items: center;
+		    width: 100%;
+		    height: auto;
+		    min-height: 750px;
+		}
+		
+		#register {
+			width: 600px;
+			height: 600px;
+			padding-left: 35px;
+			padding-right : 35px;
+		    padding-top: 50px;
+    		border: 1px solid #d3d3d3;
+    		position: relative;
+    		left: 65px;
+		}
+		
+		#register > h3 {
+			font-weight: bold;
+			font-size: 16px;
+			color: gray;
+			margin-bottom: 10px;
+		}
+		
+		#register > button {
+			position : relative;
+			left: 500px;
+		    width: 100px;
+		    height: 35px;
+		    margin-bottom:10px;
+		    font-weight: bold;
+		    border: none;
+		    color: gray;
+		}
+			
+		/* 푸터공통 */
+		footer {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-top: 1px solid #ebebeb;
+		    box-sizing: border-box;            
+		}
+		
+		footer > p {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;           
+		}
+		
+		#register_table {}
+		
+		#register_table tr > td:nth-child(1) {
+			padding: 11px;
+			width: 100px;
+			text-align: center;
+			font-weight: bold;
+			color: #bdbdbd
+		}
+		
+		#register_table tr > td:nth-child(2) {
+			padding: 3px;
+		}
+		
+		#register_table tr > td:nth-child(2) > input {
+			width: 250px;
+		    text-indent: 5px;
+		    margin-left: 2px;
+		    height: 28px;
+		}
+		
+		#auth-tr > td > span {
+			float: left;
+		}
+		
+		#auth-tr > td > span > input[type=text] {
+		    width: 250px;
+		    text-indent: 5px;
+		    height: 28px;
+		}
+		
+		#modal-address > td > input {
+			margin-bottom: 2px;
+		}
+		
+		button {
+			width: 100px;
+		    height: 30px;
+		    font-weight: bold;
+		    border: none;
+		    color: gray;
+		}
+		
+		#goRegister {
+			width: 100px;
+		    height: 30px;
+		    font-weight: bold;
+		    border: none;
+		    color: gray;
+		}
+		
+		#goLogin {
+			width: 100px;
+		    height: 30px;
+		    font-weight: bold;
+		    border: none;
+		    color: gray;
+		}
+		
+	</style>
+	<body>
+		<div id="wrapper">
+			<div>
+				<header>
+					<h3>Board System</h3>
+				</header>
+			</div>
+			<div>
+				<main>
+					<div id="register">
+						<h3>회원가입</h3>
+						<button type="button"><a th:href="@{/loginForm}" id="goLogin">로그인</a></button>
+						<form th:action="@{/register}" method="post">
+							<table border="#" id="register_table">
+								<tr>
+									<td>이름</td>
+									<td><input type="text" name="username" placeholder="이름을 입력"></td>
+								</tr>
+								<tr>
+									<td>비밀번호</td>
+									<td><input type="password" name="password" placeholder="비밀번호를 입력"></td>
+								</tr>
+								<tr>
+									<td>나이</td>
+									<td><input type="number" name="age" placeholder="나이를 입력"></td>
+								</tr>
+								<tr>
+									<td>연락처</td>
+									<td><input type="text" name="hp" placeholder="연락처를 입력"></td>
+								</tr>
+								<tr>
+									<td>이메일</td>
+									<td>
+										<input type="text" name="email" placeholder="이메일을 입력해주세요.">
+										<button type="button" name="authEmail">인증하기</button>
+									</td>
+								</tr>
+								<tr id="auth-tr">
+									<td colspan="3">
+										<span>
+											<input type="text" class="enterCode" placeholder="인증번호를 입력해주세요.">
+											<button type="button" class="ConfirmAuth">확인</button>
+										</span>
+									</td>
+								</tr>
+								<tr class="modal-address" id="modal-address">
+									<td>주소</td>
+									<td>
+										<input type="text" name="zip" id="zip" readonly="readonly" placeholder="우편번호 입력"><button type="button" onClick="postcode()" style="margin-left: 4px;">검색</button>
+										<input type="text" id="addr1" name="addr1" placeholder="도로명주소"/>
+										<input type="text" id="addr2" name="addr2" placeholder="상세주소"/>
+									</td>
+								</tr>
+								<tr>
+									<td align="right" colspan="2"><input type="submit" id="goRegister" value="회원가입"></td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</main>
+			</div>
+			<div>
+				<footer>
+					<p>ⓒCopyright</p>
+				</footer>
+			</div>
+		</div>
+	</body>
+</html>
