@@ -10,7 +10,7 @@
 								`age` 		= #{age},
 								`hp` 		= #{hp},
 								`email` 	= #{email},
-								`zip` 		= 'zip',
+								`zip` 		= #{zip},
 								`addr1` 	= #{addr1},
 								`addr2` 	= #{addr2},
 								`regip` 	= #{regip},
@@ -18,4 +18,10 @@
 								`provider` 	= 'normal',
 								`date`		= #{date};
 	</insert>
+	
+	<select id="selectCountUsername" resultType="int">
+		SELECT COUNT(`id`) AS count FROM `user` WHERE `username` = #{username};
+	</select>
+	
+	
 </mapper>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>board::write</title>
+	</head>
+	<style>
+		* {
+		    margin: 0;
+		    padding: 0;
+		    font: normal 12px '돋움';
+		}
+		
+		ul, ol {list-style: none;}
+		a {text-decoration: none; color: #111;}
+		input, textarea {outline: none;}
+		table {
+			border-collapse: collapse;
+		}
+		
+		#wrapper {
+		    width: 800px;
+		    height: auto;
+		    margin: 0 auto;
+		}
+		
+		header {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-bottom: 1px solid #ebebeb;
+		    box-sizing: border-box;
+		}
+		
+		header > h3 {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;
+		}
+		
+    	.header {
+    		float: right;
+    		width: 65px;
+   			height: 30px;
+   			line-height: 35px;
+    	}
+		
+		/* 메인공통 */
+		main {
+			display: flex;
+    		align-items: center;
+		    width: 100%;
+		    height: auto;
+		    min-height: 750px;
+		}
+			
+		/* 푸터공통 */
+		footer {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-top: 1px solid #ebebeb;
+		    box-sizing: border-box;            
+		}
+		
+		footer > p {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;           
+		}
+		
+		.board_write {
+			width: 600px;
+			height: 600px;
+    		position: relative;
+    		left: 95px;
+   			top: 50px;
+		}
+		
+		.board_write > h3 {
+	    	color: #777;
+		    font-weight: bold;
+		    font-size: 14px;
+		    margin-bottom: 8px;
+		}
+		
+		.board_write table {
+			width: 100%;
+			border-spacing: 0;
+			
+		}
+		
+		.board_write table tr:nth-child(1) {
+			height: 50px;
+		}
+		
+		.board_write table tr:nth-child(2) {
+			height: 40px;
+			line-height: 30px;
+		}
+		
+		.board_write table tr:nth-child(3) {
+			height: 300px;
+		}
+		
+		.board_write table tr > td:nth-child(1) {
+			text-align: center;
+		}
+		
+		.board_write table tr:nth-of-type(1) > td > input {
+			width: 90%;
+			height : 30px;
+			margin-left: 2px;
+		}
+		
+		.board_write table tr:nth-of-type(2) > td > input {
+			margin-left: 2px;
+		}
+		
+		.board_content {
+			width: 99%;
+    		height: 290px;
+			margin-left: 2px;
+			resize: none;
+		}
+		
+		.write_button {
+	        height: 50px;
+	        margin-top: 10px;
+		}
+		
+		.write_button button {
+    		width: 100px;
+    		height: 35px;
+    		font-weight: bold;
+		}
+		
+		.write_button button > a {
+			text-decoration: none;
+		}
+		
+		.write_button button > a:hover {
+			text-decoration: underline;
+			color: blue;
+		}
+		
+		.write_button button:nth-of-type(2):hover {
+			text-decoration: underline;
+			color: blue;
+		}
+					
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			
+			$('#goWrite').click(function(){
+				
+				let fileName = $('input[type=file]').val();
+				
+				let ext = fileName.split('.').pop().toLowerCase();
+				
+				if(fileName != ""){
+				
+			        if(ext === "jpg" || ext === "png" || ext === "jpeg"){
+			            return true;
+			        } else {
+			            alert("이미지 파일을 올려주세요.");
+			            return false;
+			        }
+				}else{
+					alertr('사진을 첨부해주세요.');
+					return false;
+				}
+				
+			});
+		});
+	</script>
+	<body>
+		<div id="wrapper">
+			<div>
+				<header>
+					<h3>Board System</h3>
+		            <p class="header">
+		                <a th:href="@{/logout}" class="logout">[로그아웃]</a>
+		            </p>
+				</header>				
+			</div>
+			<div>
+				<main>
+					<div class="board_write">
+						<h3>게시글 작성</h3>
+						<form th:action="@{/board/write}" method="post" enctype="multipart/form-data">
+							<table border="#">
+								<tr>
+									<td>제목</td>
+									<td>
+										<input type="text" name="board_title" placeholder="게시글 제목을 입력해주세요.">
+									</td>
+								</tr>
+								<tr>
+									<td>파일</td>
+									<td>
+										<input type="file" id="file" name="board_fname">
+									</td>
+								</tr>
+								<tr>
+									<td>내용</td>
+									<td>
+										<textarea name="board_content" class="board_content"></textarea>
+									</td>
+								</tr>
+							</table>
+							<div class="write_button">
+								<div style="float: right;">
+									<button type="button"><a th:href="@{/board/list}">뒤로가기</a></button>
+									<button id="goWrite">작성하기</button>
+								</div>
+							</div>
+						</form>
+					</div>						
+				</main>
+			</div>
+			<div>
+				<footer>
+					<p>ⓒCopyright</p>
+				</footer>
+			</div>
+		</div>
+	</body>
+</html>

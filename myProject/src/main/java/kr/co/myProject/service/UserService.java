@@ -25,6 +25,9 @@ public class UserService {
 	    vo.setDate(currentDate);
 		
 		dao.insertUser(vo);
-	}; 
-
+	};
+	
+	public int selectCountUsername(String username) {
+		return dao.selectCountUsername(username);
+	}
 }

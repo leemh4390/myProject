@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>board::view</title>
+	</head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<style>
+		* {
+		    margin: 0;
+		    padding: 0;
+		    font: normal 12px '돋움';
+		}
+		
+		ul, ol {list-style: none;}
+		a {text-decoration: none; color: #111;}
+		input, textarea {outline: none;}
+		table {
+			border-collapse: collapse;
+		}
+		
+		#wrapper {
+		    width: 800px;
+		    height: auto;
+		    margin: 0 auto;
+		}
+		
+		header {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-bottom: 1px solid #ebebeb;
+		    box-sizing: border-box;
+		}
+		
+		header > h3 {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;
+		}
+		
+    	.header {
+    		float: right;
+    		width: 65px;
+   			height: 30px;
+   			line-height: 35px;
+    	}		
+		
+		/* 메인공통 */
+		main {
+		    width: 100%;
+		    height: auto;
+		    min-height: 750px;
+		}	
+		
+		/* 푸터공통 */
+		footer {
+		    width: 100%;
+		    height: 35px;
+		    background: #f7f7f7;
+		    border-top: 1px solid #ebebeb;
+		    box-sizing: border-box;            
+		}
+		
+		footer > p {
+		    float: left;
+		    color: #777;
+		    font-weight: bold;
+		    margin-top: 10px;
+		    margin-left: 10px;           
+		}
+		
+		.board_view {
+		    width: 600px;
+		    height: 650px;
+		    position: relative;
+		    left: 120px;
+		    top: 50px;
+		    padding: 30px;
+		    border-bottom: 1px solid gray;
+		}
+		
+		.board_view > h3 {
+			margin-left: 25px;
+			font-size: 13px;
+			margin-bottom: 5px;
+			font-weight: bold;
+			color: gray;
+		}
+		
+		.board_view table {
+			width: 500px;
+    		height: 500px;
+			margin-left: 25px;
+		}
+		
+		.board_view table tr {
+			height: 30px;
+		}
+		
+		.board_view table tr > th {
+			width: 100px; 
+		}
+		
+		.board_view table tr > td {
+			padding: 5px;
+		}
+		
+		.board_view table tr:nth-of-type(2) > td > a {
+			color: black;
+		}
+		
+		.board_view table tr:nth-of-type(2) > td > a:hover {
+			color: blue;
+		}
+		
+		
+		.board_view table tr:nth-of-type(3) > td {
+			height: 200px;
+		}
+		
+		.board_view table tr:nth-of-type(3) > td > span {
+			width: 95%;
+			min-height: 180px;
+			margin-left: 2px;
+			display: block;
+		}
+		
+		.view_button {
+			width: 525px;
+	        height: 50px;
+	        margin-top: 10px;
+		}
+		
+		.view_button > button {
+			float : right;
+            width: 100px;
+		    height: 35px;
+		    border: none;
+		}
+		
+		.view_like {
+			display : flex;
+			justify-content: center;
+			width: 600px;
+	        height: 50px;
+	        margin-top: 10px;
+		}
+		
+		.view_like > button {
+			width: 100px;
+		    height: 35px;
+		    border: none;
+		    margin-right: 5px;
+		    font-weight: bold;
+		    color: gray;
+		}
+		
+		.view_like > button:hover {
+			background: #4d4a4a;
+		}
+		
+    	.view_button > button > a {
+    		font-weight: bold;
+		    color: gray;
+    	}		
+		
+		.board_comment {
+			width: 600px;
+		    height: 100px;
+		    position: relative;
+		    left: 120px;
+		    padding: 30px;
+		    border-bottom: 1px solid gray;
+		    margin-top: 20px;
+		}
+		
+		.board_comment > article {}
+		 
+		.board_comment > article > span {
+		    display: block;
+		    width: 100%;
+		    height: 50px;
+		    line-height: 50px;
+		    font-weight: bold;
+		    color: #5d5a5a;
+		    font-size: 13px;
+		} 
+		
+		.board_comment > article > span > textarea {
+			resize: none;
+    		width: 70%;
+    		height: 55px;
+		} 
+		.board_comment > article > button {
+			position: relative;
+			float: right;
+		    top: -50px;
+		    left: -70px;
+		    width: 100px;
+		    padding: 10px;
+		    border: none;
+		    font-size: 12px;
+		    color: #776868;
+		    font-weight: bold;
+		    height: 50px;
+		}
+		
+		
+ 		.board_reply {
+			position: relative;
+		    width: 600px;
+		    height: auto;
+		    top: -35px;
+		    left: 100px;
+		    padding: 30px;
+		    overflow: auto;
+		}
+		
+		.board_reply article {
+			border-top: 1px solid #d3d3d3;
+			border-bottom: 1px solid #d3d3d3;
+			padding: 10px;
+			margin-bottom: 5px;
+		}
+		
+		.board_reply article > table {
+			border-collapse: collapse;
+		}
+		
+		.board_reply article > table tr {
+			width: 500px;
+		}
+		
+		.board_reply article > table tr > td {
+			padding: 10px;
+		}
+		
+		.board_reply article > table tr > td:nth-child(1) {
+			width : 70px;
+			font-size: 12px;
+			font-weight : bold;
+			text-align: center;
+			border-right: 1px solid gray;
+		}
+		
+		.board_reply article > table tr > td:nth-child(2) {
+			width: 350px;
+			
+		}
+		
+		.board_reply article > table tr > td > span {
+			font-size: 11px;
+		}
+		
+		.likeOn {
+			background: #ebdfdf;
+		}
+					
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.comment').click(function(){
+				
+				const currentUrl = window.location.href;
+				
+				let url = currentUrl.lastIndexOf("="); // 현재 url 에서 "=" 찾음
+				
+				let no = currentUrl.substring(url + 1);
+				let content = $('.content').val();
+				
+				let jsonData = {"no" : no, "content" : content};
+				
+				// alert("no : " + no);
+				
+				$.ajax({
+					url : "/myProject/board/insertComment",
+					method : "POST",
+					data : jsonData,
+					dataType : "json" ,
+					success : function(data){
+						if(data == 1){
+							alert('댓글 작성 되었습니다.');
+							location.href="/myProject/board/view?no="+no;
+						}
+					}
+				});
+			});
+			
+			function performLike(data) {
+				console.log("추천 완료..")
+				$('#like').css('background','#ebdfdf');
+			    $('#CountBoardLike').text(data.board_like);
+			}
+			
+			function performLikeCancel(data) {
+				console.log("추천 해제..")
+			    $('#like').css('background','#00000');
+			    $('#CountBoardLike').text(data.board_like);
+			}
+			
+			
+			$('#like').click(function(){
+			    let parent = $('input[name=parent]').val();
+			    let username = $('input[name=username]').val();
+			    
+			    let jsonData = {"username" : username, "parent" : parent};
+			    
+			    $.ajax({
+			        url : "/myProject/board/like",
+			        method : "GET",
+			        data : jsonData,
+			        dataType : "JSON",
+			        success : function(data){
+			            if(data.duplication > 0){
+			            	$('#like').css('background-color', '#f0f0f0');
+			            	$('#CountBoardLike').text(data.like);
+			            }else{
+			            	performLike(data);
+			            }
+			        }
+			    });
+			});
+			
+			$('.likeOn').click(function(){
+			    let parent = $('input[name=parent]').val();
+			    let username = $('input[name=username]').val();
+			    
+			    let jsonData = {"username" : username, "parent" : parent};
+			    
+			    $.ajax({
+			        url : "/myProject/board/likeCancel",
+			        method : "GET",
+			        data : jsonData,
+			        dataType : "JSON",
+			        success : function(data){
+			            performLikeCancel(data);
+			        }
+			    });
+			});
+		});
+
+	</script>	
+	<body>
+		<div id="wrapper">
+			<div>
+				<header>
+					<h3>Board System</h3>
+		            <p class="header">
+		                <a th:href="@{/logout}" class="logout">[로그아웃]</a>
+		            </p>
+				</header>
+			</div>
+			<div>
+				<main>
+					<div class="board_view"> <!-- 게시글 내용 -->
+						<h3>게시글 보기</h3>
+						<input type="hidden" name="username" th:value="${username}">
+						<input type="hidden" name="parent" th:value="${article.board_no}">
+						<table border="#" style="border-collapse: collapse; border-color: gray">
+							<tr>
+								<th>제목</th>
+								<td>[[${article.board_title}]]</td>
+							</tr>
+							<tr>
+								<th>내용</th>
+								<td>
+									<span th:if="${article.newName != null}"><img th:src="@{'/file/' + ${article.newName}}" style="position:relative; width: 385px; height: 300px; top: -55px;"></span>
+									<p><a th:href="@{/download(fno=${article.fno})}" style="position: relative; top: -50px; color: blue;">[[${article.oriName}]]</a></p>
+									<span style="position: relative; top:-45px; margin-top: 5px;">[[${article.board_content}]]</span>
+								</td>
+							</tr>
+						</table>
+						<div class="view_like">
+							<button type="button" id="like">추천[<span th:text="${article.board_like}" id="CountBoardLike">0</span>]</button>
+							<button type="button" id="dislike">비추천[0]</button>
+						</div>
+						<div class="view_button">
+							<button type="button"><a th:href="@{/board/list}">목록으로</a></button>
+							<button type="button" style="float: left; position: relative; left: 25px;" 
+										th:if="${username == article.board_writer}">
+								<a th:href="@{/board/modify(no=${article.board_no})}">수정하기</a>
+							</button>
+						</div>
+					</div>
+					<div class="board_comment" sec:authorize="isAuthenticated"> <!-- 댓글 달기 로그인o -->
+						<article>
+							<span>익명의 사용자</span>
+							<span>
+								<textarea style="resize: none;" class="content" name="content"></textarea>
+							</span>
+							<button type="button" class="comment">댓글작성</button>
+						</article>
+					</div>
+					<div class="board_reply">
+					    <th:block th:if="${comments == null}" class="noComment">
+					        <p style="color: gray; text-align: center;">댓글이 없습니다.</p>
+					    </th:block>
+			   			<th:block th:unless="${comments == null}">
+							<article th:each="comment:${comments}">
+								<table>
+									<tr>
+										<td>익명</td>
+										<td>
+											<span>[[${comment.content}]]</span>
+										</td>
+									</tr>
+								</table>
+							</article>
+						</th:block>
+					</div>
+				</main>
+			</div>
+			<div>
+				<footer>
+					<p>ⓒCopyright</p>
+				</footer>
+			</div>
+		</div>
+	</body>
+</html>

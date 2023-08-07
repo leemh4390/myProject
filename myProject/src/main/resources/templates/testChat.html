@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>메시지함</title>
+  	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script> 
+    <style>
+        /* 스타일을 추가하려면 이곳에 CSS 코드를 작성하세요 */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+            width: 800px;
+            height : 700px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        #user-list {
+            width: 30%;
+            border-right: 1px solid #ccc;
+            padding-right: 10px;
+        }
+        #chat-list {
+            width: 68%;
+            padding-left: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            padding: 5px;
+            cursor: pointer;
+        }
+        li:hover {
+            background-color: #f2f2f2;
+        }
+        
+        .chat-content {
+     	    width: 95%;
+    		height: 90%;
+    		margin-left: 10px;
+    		border: 1px solid #d3d3d3;
+        }
+        
+        .chat-content > div {
+     		position: relative;
+		    width: 90%;
+		    height: 25px;
+		    top: 580px;
+		    margin-left: 16px;
+		    padding: 8px;
+			border: 1px solid #a3a0a0;
+		    border-radius: 16px;
+        }
+        
+        .chat-content > div > span{
+			position: relative;
+		    float: right;
+		    top: 4px;
+		    left: -3px;
+		    font-size: 12px;
+		    color: #8bc0ed;
+		    font-weight: bold;
+        }
+        
+        .user-img {
+        	width: 80px;
+		    height: 80px;
+		    border-radius: 70%;
+		    overflow: hidden;
+        }
+        
+        .user-name {
+        	position: relative;
+		    top: -35px;
+		    left: 10px;
+        }
+        
+        textarea {
+			resize: none;
+			position: relative;
+		    top: -5px;
+   		    left: -3px;
+		    width: 87%;
+		    margin-left: 5px;
+		    border: none;
+		    outline: none;
+		}
+		
+
+
+    </style>
+</head>
+	<script>
+		// sockjs 를 이용한 서버와 연결되는 객체
+		let ws = null;
+	
+		function setConnected(connected) {
+			
+		}
+	
+		function showMessage(message) {
+		    console.log(message);
+		    var jsonMessage = JSON.parse(message);
+	
+		    $("#chatArea").append(jsonMessage.name + ' : ' + jsonMessage.message + '\n');
+	
+		    var textArea = $('#chatArea');
+		    textArea.scrollTop( textArea[0].scrollHeight - textArea.height()   );
+	
+		}
+	
+		function connect() {
+		    // SockJS라이브러리를 이용하여 서버에 연결
+		    ws = new SockJS('/myProject/ws');
+		    // 서버가 메시지를 보내주면 함수가 호출된다.
+		    ws.onmessage = function(message) {
+		        showMessage(message.data);
+		    }
+		}
+	
+		function disconnect() {
+		    if (ws != null) {
+		        ws.close();
+		    }
+		    setConnected(false);
+		    console.log("Disconnected");
+		}
+	
+		function send() {
+		    // 웹소켓 서버에 메시지를 전송
+		    ws.send(JSON.stringify({'message': $("#chatInput").val()}));
+		    // 채팅입력창을 지우고 포커싱하라.
+		    $("#chatInput").val('');
+		    $("#chatInput").focus();
+		}
+	
+		// $(함수(){ 함수내용 });  // jquery에서 문서가 다 읽어들이면 함수()를 호출한다.
+		$(function () {
+	
+		    connect();
+	
+		    // 채팅입력창에서 키가 눌리면 함수가 호출
+		    // 엔터를 입력하면 send()함수가 호출
+		    $("#chatInput").keypress(function(e) {
+		        if (e.keyCode == 13){
+		            send();
+		        }
+		    });
+	
+		    $( "#sendBtn" ).click(function() { send(); });
+		});
+	</script>
+<body>
+    <div id="container">
+        <div id="user-list">
+            <h3 style="margin-left: 65px;">사용자 목록</h3>
+            <ul>
+                <li>
+                	<img th:src="@{/img/default_profile.png}" class="user-img">
+                	<span class="user-name">홍길동</span>
+                </li>
+                <li>
+                	<img th:src="@{/img/default_profile.png}" class="user-img">
+                	<span class="user-name">김개똥</span>
+                </li>
+                <!-- 필요한 만큼 사용자를 추가하세요 -->
+            </ul>
+        </div>
+        <div id="chat-list">
+            <h3>대화 목록</h3>
+            <!-- 대화 목록을 보여줄 공간입니다. -->
+            <div class="chat-content" id="chatArea">
+            	<div >
+            		<textarea style="resize: none;" id="chatInput"></textarea>
+            		<span class="msg" id="sendBtn">보내기</span>
+            	</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

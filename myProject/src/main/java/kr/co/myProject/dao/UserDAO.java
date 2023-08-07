@@ -11,4 +11,5 @@ import kr.co.myProject.vo.UserVO;
 public interface UserDAO {
 	
 	public void insertUser(UserVO vo); 
+	public int selectCountUsername(String username);
 }

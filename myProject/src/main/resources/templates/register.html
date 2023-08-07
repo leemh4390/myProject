@@ -4,6 +4,9 @@
 		<meta charset="UTF-8">
 		<title>회원가입</title>
 	</head>
+	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<style>
 		* {
 		    margin: 0;
@@ -153,8 +156,142 @@
 		    border: none;
 		    color: gray;
 		}
-		
 	</style>
+	<script>
+	let isUsernameOk   	= false;
+	let isEmailOk 		= false;
+	
+	var element_layer = document.getElementById('layer');
+	
+	function postcode() {
+		new daum.Postcode({
+		        oncomplete: function(data) {
+		            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+		
+		            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		            var addr = ''; // 주소 변수
+		            var extraAddr = ''; // 참고항목 변수
+		
+		            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                addr = data.roadAddress;
+		            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                addr = data.jibunAddress;
+		            }                
+		
+		            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		            document.getElementById('zip').value = data.zonecode;
+		            document.getElementById("addr1").value = addr;
+		            // 커서를 상세주소 필드로 이동한다.
+		            document.getElementById("addr2").focus();
+		        }
+		    }).open(element_layer);
+	}
+	
+	$(document).ready(function(){
+		
+		$('.usernameCheck').click(function(){
+			
+			let username = $('input[name=username]').val();
+			
+			let jsonData = {'username' : username};
+			
+			if(username == null){
+				alert('이름을 입력해주세요.');
+				isUsernameOk = false;
+			}else{
+				$.ajax({
+					url : "/myProject/register/countUsername",
+					method : 'GET',
+					data : jsonData,
+					dataType : 'json',
+					success : function(data){
+						if(data.result < 1){
+							isUsernameOk = true;
+							alert('사용가능한 이름입니다.');
+						}else{
+							isUsernameOk = false;
+							alert('사용중인 이름입니다.');
+						}
+					}
+				});
+			}
+		});
+		
+		
+		let code; // 클로저로 사용하기 위해 밖에서 빼줍니다. 
+		
+		$('button[name=authEmail]').click(function(){
+			
+			let email = $('input[name="email"]').val();
+			
+			let authEmail = $(this).closest('tr').find('input[name="email"]').val();
+			
+			let jsonData = {"authEmail" : authEmail};
+			
+			if(email != ''){
+				
+				$.ajax({
+					url: "/myProject/register/emailAuth",
+					method: "GET",
+					data: jsonData,
+					dataType: "json",
+					success: function(data){
+						alert("인증번호를 전송합니다.");
+						console.log("data : " + data.result); // 생성한 코드가 들어오는지 확인
+						
+						code = data.result;
+						
+						isEmailOk = false;
+					}
+				});
+				
+				
+			}else{
+				alert("이메일을 입력해주세요.!");
+				isEmailOk = false;
+			}
+		});
+		
+		$('.ConfirmAuth').click(function(){
+			
+			let enterCode  = $('.enterCode').val(); 
+			
+			if(enterCode == ''){
+				alert("인증번호를 입력해주세요!");
+			}else{
+				
+				if(code == enterCode){
+					alert("인증 성공!");
+					isEmailOk = true;
+				}else{
+					alert("인증 실패!");
+					isEmailOk = false;
+				}
+			}
+		});
+		
+		$('#goRegister').click(function(){
+			
+			// username 검증
+			if(!isUsernameOk){
+				alert('유저 이름을 확인해주세요.');
+				return false;
+			}
+			
+			// email 검증
+			if(!isEmailOk){
+				alert('이메을을 확인해주세요.');
+				return false;
+			}
+			
+			// 최종 전송
+			return true;
+		});
+	});
+	
+	</script>
 	<body>
 		<div id="wrapper">
 			<div>
@@ -171,7 +308,10 @@
 							<table border="#" id="register_table">
 								<tr>
 									<td>이름</td>
-									<td><input type="text" name="username" placeholder="이름을 입력"></td>
+									<td>
+										<input type="text" name="username" placeholder="이름을 입력">
+										<button type="button" class="usernameCheck">중복체크</button>
+									</td>
 								</tr>
 								<tr>
 									<td>비밀번호</td>

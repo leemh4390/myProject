@@ -27,13 +27,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 		.antMatchers("/user/**").authenticated()
+		.antMatchers("/board/**").authenticated()
 		.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
 		.anyRequest().permitAll()
 		.and()
 		.formLogin()
 		.loginPage("/loginForm")
 		.loginProcessingUrl("/login") // login 주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행
-		.defaultSuccessUrl("/")
+		.defaultSuccessUrl("/board/list?pg=1&type=all")
 		.and()
 		.oauth2Login()
 		.loginPage("/loginForm")
